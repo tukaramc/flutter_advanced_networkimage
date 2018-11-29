@@ -16,6 +16,7 @@ class ZoomableWidget extends StatefulWidget {
     this.child,
     this.onTap,
     this.zoomSteps: 0,
+    this.zoomUser:1.0,
     this.bounceBackBoundary: true,
   })  : assert(minScale != null),
         assert(maxScale != null),
@@ -23,6 +24,7 @@ class ZoomableWidget extends StatefulWidget {
 
   /// The minimum size for scaling.
   final double minScale;
+  final double zoomUser;
 
   /// The maximum size for scaling.
   final double maxScale;
@@ -136,8 +138,8 @@ class _ZoomableWidgetState extends State<ZoomableWidget>
           double _heightFactor =
               sqrt(_marginOffset.dy.abs()) / _marginSize.height;
           _marginOffset = Offset(
-            _marginOffset.dx * _widthFactor * 2,
-            _marginOffset.dy * _heightFactor * 2,
+            _marginOffset.dx * _widthFactor,
+            _marginOffset.dy * _heightFactor,
           );
           _panOffset = _baseOffset + _marginOffset;
         }
@@ -149,7 +151,7 @@ class _ZoomableWidgetState extends State<ZoomableWidget>
     Size _boundarySize =
         Size(_containerSize.width / 2, _containerSize.height / 2);
     Animation _animation =
-        CurvedAnimation(parent: _bounceController, curve: Curves.easeInOut);
+        CurvedAnimation(parent: _bounceController, curve: Curves.bounceInOut);
     Offset _borderOffset = Offset(
       _panOffset.dx.clamp(
         -_boundarySize.width / _zoom * widget.panLimit,
@@ -205,7 +207,7 @@ class _ZoomableWidgetState extends State<ZoomableWidget>
   @override
   Widget build(BuildContext context) {
     if (widget.child == null) return Container();
-
+    _zoom=widget.zoomUser;
     return CustomMultiChildLayout(
       delegate: _ZoomableWidgetLayout(),
       children: <Widget>[
