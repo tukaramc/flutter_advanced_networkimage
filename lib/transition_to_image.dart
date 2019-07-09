@@ -203,7 +203,7 @@ class _TransitionToImageState extends State<TransitionToImage>
 
   @override
   dispose() {
-    _imageStream.removeListener(_updateImage);
+    _imageStream.removeListener(new ImageStreamListener(_updateImage));
     _controller.dispose();
     _reloadListeners.removeWhere((listener) =>
         listener.keys.first == _imageProvider.hashCode.toString());
@@ -214,7 +214,7 @@ class _TransitionToImageState extends State<TransitionToImage>
     try {
       setState(() {});
     } catch (_) {
-      _imageStream?.removeListener(_updateImage);
+      _imageStream?.removeListener(new ImageStreamListener(_updateImage));
       return;
     }
     setState(() {
@@ -259,8 +259,8 @@ class _TransitionToImageState extends State<TransitionToImage>
         _status = _TransitionStatus.loading;
         _loadFailed = false;
       });
-      oldImageStream?.removeListener(_updateImage);
-      _imageStream.addListener(_updateImage);
+      oldImageStream?.removeListener(new ImageStreamListener(_updateImage));
+      _imageStream.addListener(new ImageStreamListener(_updateImage));
     }
   }
 
